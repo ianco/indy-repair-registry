@@ -8,12 +8,12 @@ import time
 import aiohttp
 import base58
 
-from indy_vdr import open_pool, ledger
 from indy_credx import (
     RevocationRegistry,
     RevocationRegistryDefinition,
     RevocationRegistryDelta,
 )
+from indy_vdr import open_pool, ledger
 
 
 async def fetch_txns(genesis_path, registry_id):
@@ -58,7 +58,7 @@ async def fetch_txns(genesis_path, registry_id):
     accum_to["ver"] = "1.0"
     delta = RevocationRegistryDelta.load(accum_to)
     registry = RevocationRegistry.load(accum_to)
-    print("Registry:", registry.to_json())
+    print("Ledger registry state:", registry.to_json())
     revoked = set(result["data"]["value"]["revoked"])
     print("Ledger revoked indexes:", revoked)
 
@@ -82,13 +82,14 @@ def run(genesis_path, registry_id, set_revoked):
     updates = set_revoked - prev_revoked
     if not updates:
         print("No updates to perform")
-    print("New revoked indexes:", updates)
+    else:
+        print("New revoked indexes:", updates)
 
-    update_registry = registry.copy()
-    new_delta = update_registry.update(defn, [], updates, tails_temp.name)
+        update_registry = registry.copy()
+        new_delta = update_registry.update(defn, [], updates, tails_temp.name)
 
-    print("New delta:")
-    print(new_delta.to_json())
+        print("New delta:")
+        print(new_delta.to_json())
 
 
 if __name__ == "__main__":
