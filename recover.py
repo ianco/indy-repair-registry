@@ -42,8 +42,9 @@ async def fetch_txns(genesis_path, registry_id):
             return
         else:
             print("Checked tails hash:", tails_hash)
-        tails_temp = tempfile.NamedTemporaryFile()
+        tails_temp = tempfile.NamedTemporaryFile(delete=False)
         tails_temp.write(tails_data)
+        tails_temp.close()
 
     to_timestamp = int(time.time())
     fetch = ledger.build_get_revoc_reg_delta_request(
@@ -85,6 +86,7 @@ def run(genesis_path, registry_id, set_revoked):
     else:
         print("New revoked indexes:", updates)
 
+        print("tails_temp:", tails_temp.name)
         update_registry = registry.copy()
         new_delta = update_registry.update(defn, [], updates, tails_temp.name)
 
@@ -95,6 +97,6 @@ def run(genesis_path, registry_id, set_revoked):
 if __name__ == "__main__":
     run(
         "genesis.txn",
-        "P6UvpU451XA5p8Dx6zsuUu:4:P6UvpU451XA5p8Dx6zsuUu:3:CL:38189:CredentialRevoke:CL_ACCUM:bf7cc241-5cf8-45e5-8aa8-891d0656c666",
-        [1, 3, 4, 5],
+        "KJKW5xiNXeGHLhXeMwH1pk:4:KJKW5xiNXeGHLhXeMwH1pk:3:CL:39610:default:CL_ACCUM:ec631ced-b985-403f-bdad-e7f2da219660",
+        [1, 3, 5, 6],
     )
