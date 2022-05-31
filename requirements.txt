@@ -1,0 +1,4 @@
+aiohttp
+base58
+indy_vdr
+indy_credx
